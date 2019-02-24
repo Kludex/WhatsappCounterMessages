@@ -8,18 +8,71 @@ class WhatsappCounter
     get_info
   end
 
-  def show_rank
+  def show_rank(min_length=0)
     contact = count_messages
     idx = 1
     contact.sort_by{|key, value| -value}.each do |key, value|
       if idx <= @rank
         puts "Key: " + key
         puts "Value: " + value.to_s
+        puts "Words: " + count_words_from(key, min_length).to_s
+        puts "Laughs: " + count_laughs(key).to_s
         idx += 1
       else
         break
       end
     end
+  end
+
+  def count_laughs(name=nil)
+    sum = 0 
+    if name.nil?
+      @messages.each do |message|
+        words = message.split
+        words.each do |word|
+          if word.include?("haha") or word.include?("kkk")
+            sum += 1
+          end
+        end
+      end
+    else
+      @messages.zip(@people) do |message, person|
+        words = message.split
+        words.each do |word|
+          if word.include?("haha") and person.include?(name)
+            sum += 1
+          end
+        end
+      end
+    end
+
+    return sum
+  end
+
+  def count_words(min_length=0)
+    sum = 0
+    @messages.each do |message|
+      words = message.split
+      words.each do |word|
+        if word.length >= min_length
+          sum += 1
+        end
+      end
+    end
+    return sum
+  end
+
+  def count_words_from(name, min_length=0)
+    sum = 0
+    @messages.zip(@people) do |message, person|
+      words = message.split
+      words.each do |word|
+        if word.length >= min_length and person.include?(name)
+          sum += 1
+        end
+      end
+    end
+    return sum
   end
 
   def count_messages
@@ -82,7 +135,8 @@ end
 args = ARGV
 file_name = args[0]
 rank = args[1].to_i
+length = args[2].to_i
 
 wtsapp = WhatsappCounter.new(file_name, rank)
-wtsapp.show_rank
+wtsapp.show_rank(length)
 
