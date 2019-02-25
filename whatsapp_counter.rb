@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 
 class WhatsappCounter
+
+  attr_reader :people, :messages, :dates
+
   def initialize(file_name, rank)
     @file_name = file_name
     @rank = rank
@@ -15,8 +18,6 @@ class WhatsappCounter
       if idx <= @rank
         puts "Key: " + key
         puts "Value: " + value.to_s
-        puts "Words: " + count_words_from(key, min_length).to_s
-        puts "Laughs: " + count_laughs(key).to_s
         idx += 1
       else
         break
@@ -24,66 +25,13 @@ class WhatsappCounter
     end
   end
 
-  def count_laughs(name=nil)
-    sum = 0 
-    if name.nil?
-      @messages.each do |message|
-        words = message.split
-        words.each do |word|
-          if word.include?("haha") or word.include?("kkk")
-            sum += 1
-          end
-        end
-      end
-    else
-      @messages.zip(@people) do |message, person|
-        words = message.split
-        words.each do |word|
-          if word.include?("haha") and person.include?(name)
-            sum += 1
-          end
-        end
-      end
-    end
-
-    return sum
-  end
-
-  def count_words(min_length=0)
-    sum = 0
-    @messages.each do |message|
-      words = message.split
-      words.each do |word|
-        if word.length >= min_length
-          sum += 1
-        end
-      end
-    end
-    return sum
-  end
-
-  def count_words_from(name, min_length=0)
-    sum = 0
-    @messages.zip(@people) do |message, person|
-      words = message.split
-      words.each do |word|
-        if word.length >= min_length and person.include?(name)
-          sum += 1
-        end
-      end
-    end
-    return sum
-  end
-
   def count_messages
     contact = {}
     @people.each do |person|
-      if person.instance_of? String
-        if contact.has_key?(person)
-          contact[person] += 1
-        else
-          contact[person] = 1
-        end
+      if contact.has_key?(person)
+        contact[person] += 1
+      else
+        contact[person] = 1
       end
     end
     contact
@@ -92,18 +40,6 @@ class WhatsappCounter
   def set_file(file_name)
     @file_name = file_name
     self.update_info
-  end
-
-  def get_people
-    @people
-  end
-
-  def get_messages
-    @messages
-  end
-
-  def get_dates
-    @dates
   end
 
 private
