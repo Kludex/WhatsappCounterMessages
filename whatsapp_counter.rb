@@ -16,8 +16,8 @@ class WhatsappCounter
     idx = 1
     contact.sort_by{|key, value| -value}.each do |key, value|
       if idx <= @rank
-        puts "Key: " + key
-        puts "Value: " + value.to_s
+        puts "Key: #{key}"
+        puts "Value: #{value}"
         idx += 1
       else
         break
@@ -26,20 +26,11 @@ class WhatsappCounter
   end
 
   def count_messages
-    contact = {}
+    contact = Hash.new(0)
     @people.each do |person|
-      if contact.has_key?(person)
-        contact[person] += 1
-      else
-        contact[person] = 1
-      end
+      contact[person] += 1
     end
     contact
-  end
-
-  def set_file(file_name)
-    @file_name = file_name
-    self.update_info
   end
 
 private
