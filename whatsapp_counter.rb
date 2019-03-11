@@ -46,16 +46,14 @@ private
   end
 
   def get_info
-    f = File.open(@file_name, "r")
-    f.each_line do |line|
-      if match = line.match(/(.*) - ([^:]*): (.*)/)
+    File.foreach(@file_name) do |line|
+      if match = line.match(/(.*) - (.*?): (.*)/)
         date, person, message = match.captures
-        @dates.push(date)
-        @people.push(person)
-        @messages.push(message)
+        @dates << date
+        @people << person
+        @messages << message
       end
     end
-    f.close
   end
 end
 
