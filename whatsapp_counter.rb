@@ -19,8 +19,6 @@ class WhatsappCounter
         puts "Key: #{key}"
         puts "Value: #{value}"
         idx += 1
-      else
-        break
       end
     end
   end
